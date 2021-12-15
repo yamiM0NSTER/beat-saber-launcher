@@ -85,6 +85,7 @@
       this.ClientSize = new System.Drawing.Size(350, 138);
       this.Controls.Add(this.tableLayoutPanel1);
       this.Controls.Add(this.textLabel);
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
       this.Name = "DeleteVersionConfirmationForm";
       this.Text = "Confirm action";
       this.tableLayoutPanel1.ResumeLayout(false);
