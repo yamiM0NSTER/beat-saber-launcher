@@ -12,7 +12,6 @@ using beat_saber_launcher.JSON;
 
 namespace beat_saber_launcher.Forms {
   internal partial class MainForm : Form {
-    Timer _launchCooldownTimer = new Timer();
     public MainForm() {
       InitializeComponent();
       selectedVersionComboBox.Items.AddRange(SettingsManager.BSVersions.ToArray());
@@ -22,22 +21,17 @@ namespace beat_saber_launcher.Forms {
       }
 
       UpdateControlsState();
-      _launchCooldownTimer.Interval = 5000;
-      _launchCooldownTimer.Stop();
-      _launchCooldownTimer.Tick += (object sender, EventArgs e) => {
-        UpdateControlsState();
-        _launchCooldownTimer.Stop();
-      };
     }
 
     public void UpdateControlsState() {
-      selectedVersionComboBox.Enabled = selectedVersionComboBox.Items.Count > 1;
+      selectedVersionComboBox.Enabled = selectedVersionComboBox.Items.Count > 1 && GameLauncher.GameRunning == false;
       if(selectedVersionComboBox.Items.Count == 1) {
         selectedVersionComboBox.SelectedItem = selectedVersionComboBox.Items[0];
       } else if (selectedVersionComboBox.Items.Count == 0) {
         selectedVersionComboBox.SelectedItem = null;
       }
-      launchButton.Enabled = propertiesButton.Enabled = selectedVersionComboBox.SelectedItem != null;
+      launchButton.Enabled = propertiesButton.Enabled = selectedVersionComboBox.SelectedItem != null && GameLauncher.GameRunning == false;
+      addButton.Enabled = GameLauncher.GameRunning == false;
 
       BSVersion sVersion = selectedVersionComboBox.SelectedItem as BSVersion;
       if(sVersion != null) {
@@ -53,8 +47,6 @@ namespace beat_saber_launcher.Forms {
 
     private void launchButton_Click(object sender, EventArgs e) {
       GameLauncher.Launch(selectedVersionComboBox.SelectedItem as BSVersion);
-      launchButton.Enabled = false;
-      _launchCooldownTimer.Start();
     }
 
     private void addButton_Click(object sender, EventArgs e) {
